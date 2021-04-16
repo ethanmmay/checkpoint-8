@@ -1,3 +1,3 @@
-export const domain = ''
-export const clientId = ''
-export const audience = ''
+export const domain = 'ethanmmay.us.auth0.com'
+export const clientId = 'KwICRJy9lnTcONWxfzTo0awxobzF6Bdd'
+export const audience = 'https://bcw-keepr'
