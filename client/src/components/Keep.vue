@@ -1,5 +1,5 @@
 <template>
-  <div class="col-xs px-0">
+  <div class="card">
     <div class="row keep-item d-flex align-items-between m-2" :style="'background-image: url(' + keep.img + ')'">
       <div class="col-12 link-area px-0 pointer" @click="showKeep()">
         <button type="button" class="btn-invis full-height" data-toggle="modal" data-target="#keepModal">
@@ -92,24 +92,5 @@ export default {
 }
 .pointer {
   cursor: pointer;
-}
-
-@media only screen and (max-width: 412px) {
-  .keep-item {
-    width: 23vh;
-  }
-  .container-fluid {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-  .link-area {
-      min-height: 180px;
-  }
-  .keep-title {
-    font-size: 12pt;
-  }
-  .item-group {
-    padding-bottom: 2vh;
-  }
 }
 </style>

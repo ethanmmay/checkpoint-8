@@ -9,48 +9,54 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="row">
-          <div class="col-6">
+          <div class="col-sm-6">
             <img :src="state.activeKeep.img" alt="Keep Image" class="img-fluid m-2">
           </div>
-          <div class="col-6 d-flex h-450">
-            <div class="row d-flex align-items-evenly">
-              <div class="col w-400 d-flex align-items-center justify-content-between mt-2">
-                <div class="col icon-group d-flex justify-content-center w-75">
-                  <div class="icon text-gray">
-                    <i class="fa fa-share text-info ml-5" aria-hidden="true"></i>
-                    {{ state.activeKeep.shares }}
+          <div class="col-sm-6 d-flexbox align-items-between" v-if="state.activeKeep.creator">
+            <div class="row">
+              <div class="col-12">
+                <div class="row d-inline-flex justify-content-between w-100 ml-0 pr-1">
+                  <div class="placeholder">
                   </div>
-                  <div class="icon text-gray">
-                    <i class="fa fa-eye text-info ml-2" aria-hidden="true"></i>
-                    {{ state.activeKeep.views }}
+                  <div class="icon-group">
+                    <div class="icon">
+                      <i class="fa fa-share text-info mr-1" aria-hidden="true"></i>
+                      {{ state.activeKeep.shares }}
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-eye text-info mr-1" aria-hidden="true"></i>
+                      {{ state.activeKeep.views }}
+                    </div>
+                    <div class="icon">
+                      <i class="fa fa-download text-info mr-1" aria-hidden="true"></i>
+                      {{ state.activeKeep.keeps }}
+                    </div>
                   </div>
-                  <div class="icon text-gray">
-                    <i class="fa fa-download text-info ml-2" aria-hidden="true"></i>
-                    {{ state.activeKeep.keeps }}
-                  </div>
-                </div>
-                <button type="button" class="close ml-5" data-dismiss="modal" aria-label="Close" id="keepModalClose">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="col mt-0">
-                <h3 class="modal-title text-center pr-5  mt-2" id="keepModalLongTitle">
-                  {{ state.activeKeep.name }}
-                </h3>
-                <div class="modal-body text-gray">
-                  {{ state.activeKeep.description }}
-                  <div class="modal-separator"></div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="keepModalClose">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
               </div>
-              <div class="col w-400 mt-auto d-flex align-items-center justify-content-between p-2 mr-3" v-if="state.activeKeep.creator">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                  ADD TO VAULT
-                </button>
-                <i class="fa fa-trash fa-2x pointer" aria-hidden="true" v-if="state.activeKeep.creator.id == state.account.id" @click="deleteKeep(state.activeKeep.id)"></i>
-                <div class="pointer" @click="sendToProfile(state.activeKeep.creator.id)">
-                  <img :src="state.activeKeep.creator.picture" style="width: 40px; height: 40px;" alt="Creator's Profile Picture">
-                  {{ state.activeKeep.creator.name.split('@')[0] }}
+              <div class="col-12">
+                <div class="row d-block">
+                  <h3 class="modal-title text-center" id="keepModalLongTitle">
+                    {{ state.activeKeep.name }}
+                  </h3>
+                  <div class="modal-body text-gray">
+                    {{ state.activeKeep.description }}
+                    <div class="modal-separator"></div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            <div class="row d-flex justify-content-between m-0 keep-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                ADD TO VAULT
+              </button>
+              <i class="fa fa-trash fa-2x pointer" aria-hidden="true" v-if="state.activeKeep.creator.id == state.account.id" @click="deleteKeep(state.activeKeep.id)"></i>
+              <div class="pointer" @click="sendToProfile(state.activeKeep.creator.id)">
+                <img :src="state.activeKeep.creator.picture" style="width: 40px; height: 40px;" alt="Creator's Profile Picture">
+                <span id="creatorName" class="ml-2">{{ state.activeKeep.creator.name.split('@')[0] }}</span>
               </div>
             </div>
           </div>
@@ -58,8 +64,10 @@
       </div>
     </div>
   </div>
-  <div class="row mx-2 d-flex align-items-center">
-    <Keep v-for="keep in state.keeps" :key="keep.id" :keep="keep" />
+  <div class="card-columns">
+    <div v-for="keep in state.keeps" :key="keep.id">
+      <Keep :keep="keep" />
+    </div>
   </div>
 </template>
 
@@ -103,31 +111,50 @@ export default {
     width: 200px;
   }
 }
-@media only screen and (max-width: 412px) {
-  .row {
-      margin-left: 0px !important;
-      margin-right: 0px !important;
-  }
-}
-.close {
-  margin-right: 3vh;
-}
-.modal-body {
-  padding-left: 0px;
-  margin-left: 3vh;
-}
-.text-gray {
-  color: rgb(75, 75, 75);
-}
 .modal-separator {
   width: 90%;
   border-bottom: 2px solid rgb(75, 75, 75);
   margin-top: 3vh;
 }
-.h-450 {
-  min-height: 450px;
+.card-columns {
+  //small
+  @media(max-width: 800px) {
+    column-count: 2;
+  }
+  @media(min-width: 1110px) {
+    column-count: 4;
+  }
+  @media(min-width: 1200px) {
+    column-count: 5;
+  }
 }
-.w-400 {
-  min-width: 400px;
+@media(max-width: 800px) {
+    #creatorName {
+      display: none;
+    }
+    #addToVaultButton {
+      content: '';
+    }
+    .icon {
+      margin-right: 0vh;
+    }
+  }
+.remove-mr {
+  margin: 0px 0px 0px 0px !important;
+}
+.icon {
+  display: inline-flex;
+  color: rgb(75, 75, 75);
+  align-items: center;
+  margin-right: 2vh;
+}
+.min-content {
+  width: min-content;
+  height: min-content;
+}
+.keep-footer {
+  bottom: 1%;
+  position: absolute;
+  width: 90%;
 }
 </style>
