@@ -21,7 +21,7 @@
                   <div class="icon-group">
                     <div class="icon">
                       <i class="fa fa-share text-info mr-1" aria-hidden="true"></i>
-                      {{ state.activeKeep.shares }}
+                      {{ state.activeKeep.shares || 0 }}
                     </div>
                     <div class="icon">
                       <i class="fa fa-eye text-info mr-1" aria-hidden="true"></i>
@@ -53,20 +53,21 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 ADD TO VAULT
               </button>
-              <i class="fa fa-trash fa-2x pointer" aria-hidden="true" v-if="state.activeKeep.creator.id == state.account.id" @click="deleteKeep(state.activeKeep.id)"></i>
-              <div class="pointer" @click="sendToProfile(state.activeKeep.creator.id)">
-                <img :src="state.activeKeep.creator.picture" style="width: 40px; height: 40px;" alt="Creator's Profile Picture">
-                <span id="creatorName" class="ml-2">{{ state.activeKeep.creator.name.split('@')[0] }}</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="card-columns">
-    <div v-for="keep in state.keeps" :key="keep.id">
-      <Keep :keep="keep" />
+  <div class="row min-size w-100">
+    <div class="col-12 min-size">
+      <h2>{{ state.currentVault.name }}</h2>
+    </div>
+    <div class="col-12 min-size">
+      Keeps: {{ state.keepsByVault.length}}
+    </div>
+    <div class="card-columns">
+      <Keep v-for="keep in state.keepsByVault" :key="keep.id" :keep="keep" />
     </div>
   </div>
 </template>
@@ -75,46 +76,39 @@
 import { computed, onMounted, reactive } from 'vue'
 import { AppState } from '../AppState'
 import { keepService } from '../services/KeepService'
-import { useRouter } from 'vue-router'
+import { vaultService } from '../services/VaultService'
+import { useRoute } from 'vue-router'
 export default {
-  name: 'Home',
+  name: 'VaultPage',
   setup() {
-    const router = useRouter()
+    const route = useRoute()
     onMounted(() => {
-      keepService.getKeeps()
+      vaultService.getVaultById(route.params.vaultId)
+      keepService.getKeepsByVaultId(route.params.vaultId)
     })
     const state = reactive({
-      keeps: computed(() => AppState.keeps),
       activeKeep: computed(() => AppState.activeKeep),
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+      currentVault: computed(() => AppState.currentVault),
+      keepsByVault: computed(() => AppState.keepsByVault)
     })
     return {
-      state,
-      deleteKeep(keepId) {
-        keepService.deleteKeep(keepId)
-      },
-      sendToProfile(profileId) {
-        document.getElementById('keepModalClose').click()
-        router.push({ name: 'Profile', params: { profileId: profileId } })
-      }
+      state
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.home{
-  text-align: center;
-  user-select: none;
-  > img{
-    height: 200px;
-    width: 200px;
-  }
-}
 .modal-separator {
   width: 90%;
   border-bottom: 2px solid rgb(75, 75, 75);
   margin-top: 3vh;
+}
+.card {
+  background-color: rgba(255, 255, 255, 0) !important;
+  border: none;
+  width: min-content;
 }
 .card-columns {
   //small
@@ -151,7 +145,7 @@ export default {
   align-items: center;
   margin-right: 2vh;
 }
-.min-content {
+.min-size {
   width: min-content;
   height: min-content;
 }

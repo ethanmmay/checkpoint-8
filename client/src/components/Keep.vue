@@ -9,17 +9,18 @@
         <button class="keep-title mb-0 d-flex w-100 pointer btn-invis" @click="showKeep()" data-toggle="modal" data-target="#keepModal" type="button">
           {{ keep.name }}
         </button>
-        <i class="fa fa-user-circle-o text-info pointer" aria-hidden="true" @click="sendToProfile(keep.creator.id)"></i>
+        <i class="fa fa-user-circle-o text-info pointer" aria-hidden="true" @click="sendToProfile(keep.creatorId)"></i>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { Keep } from '../models/Keep'
 import { keepService } from '../services/KeepService'
 import { useRouter } from 'vue-router'
+import { AppState } from '../AppState'
 export default {
   props: {
     keep: { type: Object, default: () => new Keep() }
@@ -28,6 +29,7 @@ export default {
   setup(props) {
     const router = useRouter()
     const state = reactive({
+      activeKeep: computed(() => AppState.activeKeep)
     })
     return {
       state,
@@ -35,7 +37,6 @@ export default {
         keepService.setActiveKeep(props.keep)
       },
       sendToProfile(profileId) {
-        console.log('Send to profile')
         router.push({ name: 'Profile', params: { profileId: profileId } })
       }
     }

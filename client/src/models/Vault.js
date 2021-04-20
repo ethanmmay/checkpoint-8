@@ -1,4 +1,4 @@
-export class Keep {
+export class Vault {
   constructor(data = {}) {
     this.id = data.id || ''
     this.name = data.name || ''
@@ -7,7 +7,6 @@ export class Keep {
     this.views = data.views || 0
     this.shares = data.shares || 0
     this.keeps = data.keeps || 0
-    this.creatorId = data.creatorId || undefined
     this.creator = data.creator || { name: 'unknown', picture: '//placehold.it/20x20' }
   }
 }

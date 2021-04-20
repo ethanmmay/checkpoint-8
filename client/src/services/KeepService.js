@@ -15,6 +15,15 @@ class KeepService {
     }
   }
 
+  async getKeepsByVaultId(vaultId) {
+    try {
+      const res = await api.get(`api/vaults/${vaultId}/keeps`)
+      AppState.keepsByVault = res.data.map(k => new Keep(k))
+    } catch (err) {
+      logger.error('Couldnt load Keeps', err)
+    }
+  }
+
   setActiveKeep(keep) {
     try {
       AppState.activeKeep = keep
@@ -22,6 +31,15 @@ class KeepService {
       logger.error('Cant set active keep', error)
     }
   }
+
+  // async getCreatorForProfilePage(keepId) {
+  //   try {
+  //     const res = await api.get('api/keeps/' + keepId)
+  //     re
+  //   } catch (error) {
+  //     logger.error('')
+  //   }
+  // }
 
   async createKeep() {
     try {
