@@ -35,7 +35,8 @@ export default {
         keepService.setActiveKeep(props.keep)
       },
       sendToProfile(profileId) {
-        router.push({ to: 'Profile', params: { profileId: profileId } })
+        console.log('Send to profile')
+        router.push({ name: 'Profile', params: { profileId: profileId } })
       }
     }
   }

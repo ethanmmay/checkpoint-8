@@ -12,6 +12,24 @@ class ProfileService {
       logger.error('Couldnt load Profiles', err)
     }
   }
+
+  async getProfileVaults(profileId) {
+    try {
+      const res = await api.get('api/profiles/' + profileId + '/vaults')
+      AppState.profileVaults = res.data
+    } catch (err) {
+      logger.error('Couldnt load Profile Vaults', err)
+    }
+  }
+
+  async getProfileKeeps(profileId) {
+    try {
+      const res = await api.get('api/profiles/' + profileId + '/keeps')
+      AppState.profileKeeps = res.data
+    } catch (err) {
+      logger.error('Couldnt load Profile Keeps', err)
+    }
+  }
 }
 
 export const profileService = new ProfileService()

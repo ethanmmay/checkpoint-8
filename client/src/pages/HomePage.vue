@@ -8,7 +8,7 @@
   >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="row">
+        <div class="row d-flex">
           <div class="col-sm-6">
             <img :src="state.activeKeep.img" alt="Keep Image" class="img-fluid m-2">
           </div>
@@ -95,6 +95,7 @@ export default {
       },
       sendToProfile(profileId) {
         console.log('Send to profile')
+        document.getElementById('keepModalClose').click()
         router.push({ name: 'Profile', params: { profileId: profileId } })
       }
     }
@@ -138,6 +139,9 @@ export default {
     .icon {
       margin-right: 0vh;
     }
+    .img-fluid {
+      margin: 0px 0px 0px 0px !important;
+    }
   }
 .remove-mr {
   margin: 0px 0px 0px 0px !important;
@@ -156,5 +160,9 @@ export default {
   bottom: 1%;
   position: absolute;
   width: 90%;
+}
+.img-fluid {
+  border: 4px solid white;
+  border-radius: 10px;
 }
 </style>
