@@ -2,7 +2,7 @@
   <header>
     <Navbar />
   </header>
-  <main>
+  <main class="container-fluid p-3">
     <router-view />
   </main>
   <footer>
@@ -26,5 +26,10 @@ export default {
 </script>
 <style lang="scss">
 @import "./assets/scss/main.scss";
-
+@media only screen and (max-width: 412px) {
+  .container-fluid {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+  }
+}
 </style>
