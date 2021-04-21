@@ -76,7 +76,7 @@ export default {
     height: 80%;
 }
 .keep-title {
-    font-size: 20pt;
+    font-size: 12pt;
     font-weight: bold;
     color: var(--light);
     filter: drop-shadow(2px 2px 2px black);

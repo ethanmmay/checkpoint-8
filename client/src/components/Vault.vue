@@ -1,7 +1,7 @@
 <template>
   <div class="private" v-if="vault.isPrivate">
     <router-link :to="{ name: 'VaultPage', params: { vaultId: vault.id }}" v-if="route.params.profileId === state.account.id">
-      <div class="col m-1 rounded bg-dark text-light p-2">
+      <div class="col m-1 rounded bg-warning text-light p-2">
         <h5 class="mb-0">
           {{ vault.name }}
         </h5>

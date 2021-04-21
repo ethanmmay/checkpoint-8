@@ -50,9 +50,20 @@
               </div>
             </div>
             <div class="row d-flex justify-content-between m-0 keep-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                ADD TO VAULT
-              </button>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                >
+                  ADD TO VAULT
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <DropdownVaultItem v-for="vault in state.profileVaults" :key="vault.id" :vault="vault" />
+                </div>
+              </div>
               <i class="fa fa-trash fa-2x pointer" aria-hidden="true" v-if="state.activeKeep.creator.id == state.account.id" @click="deleteKeep(state.activeKeep.id)"></i>
               <div class="pointer" @click="sendToProfile(state.activeKeep.creator.id)">
                 <img :src="state.activeKeep.creator.picture" style="width: 40px; height: 40px;" alt="Creator's Profile Picture">
@@ -86,7 +97,8 @@ export default {
     const state = reactive({
       keeps: computed(() => AppState.keeps),
       activeKeep: computed(() => AppState.activeKeep),
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+      profileVaults: computed(() => AppState.profileVaults)
     })
     return {
       state,
