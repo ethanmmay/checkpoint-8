@@ -78,14 +78,16 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12  ">
+      <div class="col-12 d-inline-flex align-items-center">
         <h3>Vaults</h3>
+        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createVault()"></i>
       </div>
       <Vault v-for="vault in state.profileVaults" :key="vault.id" :vault="vault" />
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-12 d-inline-flex align-items-center">
         <h3>Keeps</h3>
+        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createKeep()"></i>
       </div>
       <div class="card-columns">
         <Keep v-for="keep in state.profileKeeps" :key="keep.id" :keep="keep" />
@@ -99,6 +101,8 @@ import { computed, onMounted, reactive } from 'vue'
 import { AppState } from '../AppState'
 import { useRoute, useRouter } from 'vue-router'
 import { profileService } from '../services/ProfileService'
+import { keepService } from '../services/KeepService'
+import { vaultService } from '../services/VaultService'
 export default {
   name: 'Profile',
   setup() {
@@ -121,6 +125,12 @@ export default {
       sendToProfile(profileId) {
         document.getElementById('keepModalClose').click()
         router.push({ name: 'Profile', params: { profileId: profileId } })
+      },
+      createKeep() {
+        keepService.createKeep()
+      },
+      createVault() {
+        vaultService.createVault()
       }
     }
   }

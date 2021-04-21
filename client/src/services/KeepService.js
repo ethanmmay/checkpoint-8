@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 import { AppState } from '../AppState'
 import { Keep } from '../models/Keep'
-import router from '../router'
 import { logger } from '../utils/Logger'
 import { api } from './AxiosService'
+import { profileService } from './ProfileService'
 
 class KeepService {
   async getKeeps() {
@@ -32,40 +32,31 @@ class KeepService {
     }
   }
 
-  // async getCreatorForProfilePage(keepId) {
-  //   try {
-  //     const res = await api.get('api/keeps/' + keepId)
-  //     re
-  //   } catch (error) {
-  //     logger.error('')
-  //   }
-  // }
-
   async createKeep() {
     try {
       Swal.fire({
         title: 'New Keep',
-        html: '<input type="text" id="title" class="swal2-input" placeholder="Enter Keep Name.. "><textarea type="text" id="body" class="swal2-input pt-2" placeholder="Describe the keep..."></textarea>',
-        confirmButtonText: 'Report',
+        html: '<input type="text" id="name" class="swal2-input" placeholder="Enter Keep Name.. "><textarea type="text" id="img" class="swal2-input pt-2" placeholder="Image Url..."></textarea><textarea type="text" id="description" class="swal2-input pt-2" placeholder="Describe the keep..."></textarea>',
+        confirmButtonText: 'Post',
         focusConfirm: false,
         preConfirm: () => {
-          const title = Swal.getPopup().querySelector('#title').value
-          const body = Swal.getPopup().querySelector('#body').value
-          if (!title || !body) {
-            Swal.showValidationMessage('Please enter title and body')
+          const name = Swal.getPopup().querySelector('#name').value
+          const img = Swal.getPopup().querySelector('#img').value
+          const description = Swal.getPopup().querySelector('#description').value
+          if (!name || !img || !description) {
+            Swal.showValidationMessage('Please enter a name, description and image URL.')
           }
-          return { title: title, body: body }
+          return { name: name, img: img, description: description }
         }
       }).then(async(result) => {
         const newKeep = {
-          title: result.value.title,
-          description: result.value.body,
-          creatorId: AppState.user.id
+          name: result.value.name,
+          img: result.value.img,
+          description: result.value.description,
+          creatorId: AppState.account.id
         }
         await api.post('api/keeps', newKeep)
-        AppState.keeps = []
-        await this.getKeeps()
-        router.push({ name: 'Keep', params: { id: AppState.keeps[AppState.keeps.length - 1].id } })
+        await profileService.getProfileKeeps(AppState.account.id)
       })
     } catch (err) {
       logger.error('Couldnt create Keep', err)
@@ -81,39 +72,6 @@ class KeepService {
       }
     } catch (error) {
       logger.log(error)
-    }
-  }
-
-  sortKeeps() {
-    AppState.keeps.sort(function(a, b) { return a.closed - b.closed })
-  }
-
-  async editKeep(keep) {
-    try {
-      Swal.fire({
-        title: 'Edit Keep',
-        html: `<input type="text" id="title" class="swal2-input" placeholder="Enter Keep Name.. " value="${keep.title}"><textarea type="text" id="body" class="swal2-input pt-2" placeholder="Describe the keep...">${keep.description}</textarea>`,
-        confirmButtonText: 'Save',
-        focusConfirm: false,
-        preConfirm: () => {
-          const title = Swal.getPopup().querySelector('#title').value
-          const body = Swal.getPopup().querySelector('#body').value
-          if (!title || !body) {
-            Swal.showValidationMessage('Please enter title and body')
-          }
-          return { title: title, body: body }
-        }
-      }).then(async(result) => {
-        const newKeep = {
-          title: result.value.title,
-          description: result.value.body
-        }
-        await api.put('api/keeps/' + keep.id, newKeep)
-        AppState.keeps = []
-        await this.getKeeps()
-      })
-    } catch (err) {
-      logger.error('Couldnt edit Keep', err)
     }
   }
 }

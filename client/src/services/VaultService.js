@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 import { AppState } from '../AppState'
 import { Vault } from '../models/Vault'
-import router from '../router'
 import { logger } from '../utils/Logger'
 import { api } from './AxiosService'
+import { profileService } from './ProfileService'
 
 class VaultService {
   async getVaults() {
@@ -36,27 +36,42 @@ class VaultService {
     try {
       Swal.fire({
         title: 'New Vault',
-        html: '<input type="text" id="title" class="swal2-input" placeholder="Enter Vault Name.. "><textarea type="text" id="body" class="swal2-input pt-2" placeholder="Describe the vault..."></textarea>',
-        confirmButtonText: 'Report',
+        html: '<input type="text" id="title" class="swal2-input" placeholder="Enter Vault Name.. "><input type="text" id="description" class="swal2-input" placeholder="Describe the Vault.. ">',
+        confirmButtonText: 'Post',
         focusConfirm: false,
         preConfirm: () => {
           const title = Swal.getPopup().querySelector('#title').value
-          const body = Swal.getPopup().querySelector('#body').value
-          if (!title || !body) {
-            Swal.showValidationMessage('Please enter title and body')
+          const description = Swal.getPopup().querySelector('#description').value
+          if (!title || !description) {
+            Swal.showValidationMessage('Please enter a title and description')
           }
-          return { title: title, body: body }
+          return { title: title, description: description }
         }
       }).then(async(result) => {
         const newVault = {
-          title: result.value.title,
-          description: result.value.body,
-          creatorId: AppState.user.id
+          name: result.value.title,
+          description: result.value.description,
+          creatorId: AppState.account.id
         }
-        await api.post('api/vaults', newVault)
-        AppState.vaults = []
-        await this.getVaults()
-        router.push({ name: 'Vault', params: { id: AppState.vaults[AppState.vaults.length - 1].id } })
+        Swal.fire({
+          title: 'Is this vault private?',
+          input: 'checkbox',
+          inputPlaceholder: 'Yes, its private'
+        }).then(async function(result) {
+          if (result.value) {
+            Swal.fire({ icon: 'success', text: 'Created a private vault' })
+            newVault.isPrivate = true
+            await api.post('api/vaults', newVault)
+            await profileService.getProfileVaults(AppState.account.id)
+          } else if (result.value === 0) {
+            Swal.fire({ icon: 'success', text: 'Created a public vault' })
+            newVault.isPrivate = false
+            await api.post('api/vaults', newVault)
+            await profileService.getProfileVaults(AppState.account.id)
+          } else {
+            logger.log(`modal was dismissed by ${result.dismiss}`)
+          }
+        })
       })
     } catch (err) {
       logger.error('Couldnt create Vault', err)
