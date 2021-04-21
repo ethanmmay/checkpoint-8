@@ -1,12 +1,13 @@
 <template>
   <div class="card">
-    <div class="row keep-item d-flex align-items-between m-2" :style="'background-image: url(' + keep.img + ')'">
-      <div class="col-12 link-area px-0 pointer" @click="showKeep()">
-        <button type="button" class="btn-invis full-height" data-toggle="modal" data-target="#keepModal">
+    <div class="col-12 keep-item d-flex align-items-between m-2">
+      <img :src="keep.img" alt="Keep Image" class="keep-img">
+      <div class="row link-area m-0 px-0 pointer" @click="showKeep()">
+        <button type="button" class="btn-invis" data-toggle="modal" data-target="#keepModal">
         </button>
       </div>
-      <div class="col-12 item-group d-flex align-items-center justify-content-between">
-        <button class="keep-title mb-0 d-flex w-100 pointer btn-invis" @click="showKeep()" data-toggle="modal" data-target="#keepModal" type="button">
+      <div class="row d-inline-flex item-group w-95 ml-2 mb-1 align-items-center justify-content-between">
+        <button class="keep-title mb-0 d-flex pointer btn-invis" @click="showKeep()" data-toggle="modal" data-target="#keepModal" type="button">
           {{ keep.name }}
         </button>
         <i class="fa fa-user-circle-o text-info pointer" aria-hidden="true" @click="sendToProfile(keep.creatorId)"></i>
@@ -45,24 +46,24 @@ export default {
 </script>
 
 <style lang="scss">
-.col {
-    height: min-content;
-    width: min-content;
-}
 .keep-item {
     width: 33vh;
-    height: auto;
-    max-height: 40vh;
     background-size: cover;
     border-radius: 10px;
     filter: drop-shadow(2px 2px 4px black);
 }
+.keep-img {
+  width: 33vh;
+  height: auto;
+  border-radius: 10px;
+}
 .btn-invis {
   background-color: rgba(255, 255, 255, 0);
   border: none;
+  width: 100%;
+  padding: 0px 0px 0px 0px;
 }
 .full-height {
-  min-height: 240px;
   height: 100%;
   width: 100%;
   padding-left: 0px !important;
@@ -70,14 +71,22 @@ export default {
 }
 .item-group {
     height: min-content;
+    position: absolute;
+  bottom: 1%;
+}
+.w-95 {
+  width: 95%;
 }
 .link-area {
-    min-height: 240px;
-    height: 80%;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
 }
 .keep-title {
     font-size: 12pt;
     font-weight: bold;
+    width: 89.4%;
     color: var(--light);
     filter: drop-shadow(2px 2px 2px black);
 }
@@ -94,5 +103,9 @@ export default {
 }
 .pointer {
   cursor: pointer;
+}
+.card {
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
 }
 </style>

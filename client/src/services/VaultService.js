@@ -28,7 +28,6 @@ class VaultService {
     try {
       const res = await api.get(`api/profiles/${accountId}/privatevaults`)
       AppState.profileVaults = res.data.map(v => new Vault(v))
-      console.log(AppState.profileVaults)
     } catch (err) {
       logger.error('Couldnt load Vaults', err)
     }

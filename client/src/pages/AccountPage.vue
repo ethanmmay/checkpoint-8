@@ -2,6 +2,9 @@
   <div class="about text-center">
     <h1>Welcome {{ account.name }}</h1>
     <img class="rounded" :src="account.picture" alt="" />
+    <router-link :to="{ name: 'Profile', params: { profileId: account.id } }">
+      My profile
+    </router-link>
     <p>{{ account.email }}</p>
   </div>
 </template>

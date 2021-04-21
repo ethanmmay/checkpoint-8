@@ -45,7 +45,6 @@ export default {
         router.push({ name: 'VaultPage', params: { vaultId: vaultId } })
       },
       sendToProfile(profileId) {
-        console.log('Send to profile')
         router.push({ name: 'Profile', params: { profileId: profileId } })
       },
       deleteVault(vaultId) {

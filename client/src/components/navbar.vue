@@ -1,10 +1,10 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar bg-mint">
     <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
       <div class="d-flex flex-column align-items-center">
         <img
           alt="logo"
-          src="../assets/img/cw-logo.png"
+          src="../assets/img/keepr-logo.png"
           height="45"
         />
       </div>
@@ -22,16 +22,6 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link :to="{ name: 'Home' }" class="nav-link">
-            Home
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'About' }" class="nav-link">
-            About
-          </router-link>
-        </li>
       </ul>
       <span class="navbar-text">
         <button
@@ -42,24 +32,24 @@
           Login
         </button>
 
-        <div class="dropdown" v-else>
+        <div class="dropdown bg-gray text-light p-2 pr-3 rounded" v-else>
           <div
-            class="dropdown-toggle"
+            class="dropdown-toggle d-inline-flex align-items-center"
             @click="state.dropOpen = !state.dropOpen"
           >
-            <img
-              :src="user.picture"
-              alt="user photo"
-              height="40"
-              class="rounded"
-            />
-            <span class="mx-3">{{ user.name }}</span>
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+            <span class="mx-3">{{ user.name.split('@')[0] }}</span>
           </div>
           <div
-            class="dropdown-menu p-0 list-group w-100"
+            class="dropdown-menu list-group w-100"
             :class="{ show: state.dropOpen }"
             @click="state.dropOpen = false"
           >
+            <router-link :to="{ name: 'Profile', params: { profileId: state.account.id } }">
+              <div class="list-group-item list-group-item-action hoverable">
+                Profile
+              </div>
+            </router-link>
             <router-link :to="{ name: 'Account' }">
               <div class="list-group-item list-group-item-action hoverable">
                 Account
@@ -86,7 +76,8 @@ export default {
   name: 'Navbar',
   setup() {
     const state = reactive({
-      dropOpen: false
+      dropOpen: false,
+      account: computed(() => AppState.account)
     })
     return {
       state,
@@ -123,5 +114,14 @@ a:hover {
 }
 .nav-item .nav-link.router-link-exact-active{
   color: var(--primary);
+}
+.bg-mint {
+  background-color: #55EFC4;
+}
+.bg-gray {
+  background-color: #636E72;
+}
+.fa-user-o {
+  font-size: 20pt;
 }
 </style>
