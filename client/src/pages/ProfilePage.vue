@@ -110,7 +110,11 @@ export default {
     const router = useRouter()
     onMounted(() => {
       profileService.getProfile(route.params.profileId)
-      profileService.getProfileVaults(route.params.profileId)
+      if (route.params.profileId === AppState.account.id) {
+        vaultService.getPrivateVaults(AppState.account.id)
+      } else {
+        profileService.getProfileVaults(route.params.profileId)
+      }
       profileService.getProfileKeeps(route.params.profileId)
     })
     const state = reactive({

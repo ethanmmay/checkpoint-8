@@ -36,6 +36,12 @@ namespace server.Services
             return vaults;
         }
 
+        internal IEnumerable<Vault> GetPrivate(string accountId)
+        {
+            IEnumerable<Vault> vaults = _repo.GetPrivate(accountId);
+            return vaults;
+        }
+
         public Vault Create(Vault newVault)
         {
             newVault.id = _repo.Create(newVault);

@@ -64,6 +64,22 @@ namespace server.Repositories
             }, new { id }, splitOn: "id");
         }
 
+        internal IEnumerable<Vault> GetPrivate(string id)
+        {
+            string sql = @"
+            SELECT
+            vault.*,
+            p.*
+            FROM vaults vault
+            JOIN profiles p ON p.id = vault.creatorId
+            WHERE vault.creatorId = @id";
+            return _db.Query<Vault, Profile, Vault>(sql, (vault, profile) =>
+            {
+                vault.creator = profile;
+                return vault;
+            }, new { id }, splitOn: "id");
+        }
+
         internal int Create(Vault newVault)
         {
             string sql = @"
