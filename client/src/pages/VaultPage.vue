@@ -50,8 +50,22 @@
               </div>
             </div>
             <div class="row d-flex justify-content-between m-0 keep-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                ADD TO VAULT
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                >
+                  ADD TO VAULT
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <DropdownVaultItem v-for="vault in state.profileVaults" :key="vault.id" :vault="vault" />
+                </div>
+              </div>
+              <button class="btn btn-danger" @click="deleteRelationship(state.activeKeep.id, state.currentVault.id)" v-if="state.currentVault.creator.id === state.account.id">
+                REMOVE FROM VAULT
               </button>
             </div>
           </div>
@@ -64,7 +78,7 @@
       <h2>{{ state.currentVault.name }}</h2>
     </div>
     <div class="col-12 min-size">
-      Keeps: {{ state.keepsByVault.length}}
+      Keeps: {{ state.keepsByVault.length }}
     </div>
     <div class="card-columns">
       <Keep v-for="keep in state.keepsByVault" :key="keep.id" :keep="keep" />
@@ -78,6 +92,7 @@ import { AppState } from '../AppState'
 import { keepService } from '../services/KeepService'
 import { vaultService } from '../services/VaultService'
 import { useRoute } from 'vue-router'
+import { vaultkeepService } from '../services/VaultKeepService'
 export default {
   name: 'VaultPage',
   setup() {
@@ -90,10 +105,14 @@ export default {
       activeKeep: computed(() => AppState.activeKeep),
       account: computed(() => AppState.account),
       currentVault: computed(() => AppState.currentVault),
-      keepsByVault: computed(() => AppState.keepsByVault)
+      keepsByVault: computed(() => AppState.keepsByVault),
+      profileVaults: computed(() => AppState.profileVaults)
     })
     return {
-      state
+      state,
+      deleteRelationship(keepId, vaultId) {
+        vaultkeepService.deleteRelationship(keepId, vaultId)
+      }
     }
   }
 }

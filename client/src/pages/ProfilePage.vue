@@ -50,9 +50,20 @@
               </div>
             </div>
             <div class="row d-flex justify-content-between m-0 keep-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                ADD TO VAULT
-              </button>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                >
+                  ADD TO VAULT
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <DropdownVaultItem v-for="vault in state.profileVaults" :key="vault.id" :vault="vault" />
+                </div>
+              </div>
               <i class="fa fa-trash fa-2x pointer" aria-hidden="true" v-if="state.activeKeep.creator.id == state.account.id" @click="deleteKeep(state.activeKeep.id)"></i>
               <div class="pointer" @click="sendToProfile(state.activeKeep.creator.id)">
                 <img :src="state.activeKeep.creator.picture" style="width: 40px; height: 40px;" alt="Creator's Profile Picture">
@@ -80,14 +91,14 @@
     <div class="row">
       <div class="col-12 d-inline-flex align-items-center">
         <h3>Vaults</h3>
-        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createVault()"></i>
+        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createVault()" v-if="state.profile.id === state.account.id"></i>
       </div>
       <Vault v-for="vault in state.profileVaults" :key="vault.id" :vault="vault" />
     </div>
     <div class="row">
       <div class="col-12 d-inline-flex align-items-center">
         <h3>Keeps</h3>
-        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createKeep()"></i>
+        <i class="fa fa-plus text-info ml-2 pointer" aria-hidden="true" @click="createKeep()" v-if="state.profile.id === state.account.id"></i>
       </div>
       <div class="card-columns">
         <Keep v-for="keep in state.profileKeeps" :key="keep.id" :keep="keep" />
@@ -129,6 +140,10 @@ export default {
       },
       createKeep() {
         keepService.createKeep()
+      },
+      async deleteKeep(keepId) {
+        await keepService.deleteKeep(keepId)
+        profileService.getProfileKeeps(route.params.profileId)
       },
       createVault() {
         vaultService.createVault()

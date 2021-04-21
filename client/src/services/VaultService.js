@@ -28,6 +28,7 @@ class VaultService {
     try {
       const res = await api.get(`api/profiles/${accountId}/privatevaults`)
       AppState.profileVaults = res.data.map(v => new Vault(v))
+      console.log(AppState.profileVaults)
     } catch (err) {
       logger.error('Couldnt load Vaults', err)
     }
@@ -91,7 +92,7 @@ class VaultService {
     try {
       if (window.confirm('Are you sure you want to delete your Vault?')) {
         await api.delete('api/vaults/' + vaultId)
-        this.getVaults()
+        profileService.getProfileVaults(AppState.account.id)
         document.getElementById('vaultModalClose').click()
       }
     } catch (error) {
