@@ -78,9 +78,12 @@
       <h2>{{ state.currentVault.name }}</h2>
     </div>
     <div class="col-12 min-size">
-      Keeps: {{ state.keepsByVault.length }}
+      Keeps: {{ state.currentVault.isPrivate ? state.keepsByPrivateVault.length : state.keepsByVault.length }}
     </div>
-    <div class="card-columns">
+    <div class="card-columns" v-if="state.currentVault.isPrivate">
+      <Keep v-for="keep in state.keepsByPrivateVault" :key="keep.id" :keep="keep" />
+    </div>
+    <div class="card-columns" v-else>
       <Keep v-for="keep in state.keepsByVault" :key="keep.id" :keep="keep" />
     </div>
   </div>
@@ -99,6 +102,7 @@ export default {
     const route = useRoute()
     onMounted(() => {
       vaultService.getVaultById(route.params.vaultId)
+      keepService.getPrivateKeeps(route.params.vaultId)
       keepService.getKeepsByVaultId(route.params.vaultId)
     })
     const state = reactive({
@@ -106,6 +110,7 @@ export default {
       account: computed(() => AppState.account),
       currentVault: computed(() => AppState.currentVault),
       keepsByVault: computed(() => AppState.keepsByVault),
+      keepsByPrivateVault: computed(() => AppState.keepsByPrivateVault),
       profileVaults: computed(() => AppState.profileVaults)
     })
     return {

@@ -24,6 +24,15 @@ class KeepService {
     }
   }
 
+  async getPrivateKeeps(vaultId) {
+    try {
+      const res = await api.get(`api/vaults/${vaultId}/privatekeeps`)
+      AppState.keepsByPrivateVault = res.data.map(k => new Keep(k))
+    } catch (err) {
+      logger.error('Couldnt load Keeps', err)
+    }
+  }
+
   setActiveKeep(keep) {
     try {
       AppState.activeKeep = keep

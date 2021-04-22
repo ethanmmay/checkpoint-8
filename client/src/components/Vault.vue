@@ -1,7 +1,7 @@
 <template>
   <div class="private" v-if="vault.isPrivate">
-    <div class="col d-inline-flex m-1 rounded bg-warning text-light p-2">
-      <router-link :to="{ name: 'VaultPage', params: { vaultId: vault.id }}" v-if="route.params.profileId === state.account.id">
+    <div class="col d-inline-flex m-1 rounded bg-warning text-light p-2" v-if="route.params.profileId === state.account.id">
+      <router-link :to="{ name: 'VaultPage', params: { vaultId: vault.id }}">
         <h5 class="mb-0">
           {{ vault.name }}
         </h5>
@@ -58,5 +58,8 @@ export default {
 <style lang="scss">
 .col {
   max-width: min-content;
+}
+.hidden {
+  display: none !important;
 }
 </style>

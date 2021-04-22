@@ -73,6 +73,35 @@ namespace server.Controllers
             };
         }
 
+        [HttpGet("{vaultId}/privatekeeps")]
+        public ActionResult<IEnumerable<Keep>> GetPrivateKeeps(int vaultId)
+        {
+            try
+            {
+                Vault testVault = _vs.Get(vaultId);
+                return Ok(_ks.GetByVaultId(vaultId));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            };
+        }
+
+        [HttpGet("{id}/nocheck")]
+        public async Task<ActionResult<Vault>> GetByIdNoCheck(int id)
+        {
+            try
+            {
+                Profile userInfo = await HttpContext.GetUserInfoAsync<Profile>();
+                Vault vault = _vs.Get(id);
+                return Ok(vault);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            };
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<Vault>> Post([FromBody] Vault newVault)
